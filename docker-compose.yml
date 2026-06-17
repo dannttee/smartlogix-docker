@@ -1,0 +1,30 @@
+services:
+  frontend:
+    build:
+      context: ../smartlogix-frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - bff
+
+  bff:
+    build:
+      context: ../smartlogix-bff
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+  inventario-ms:
+    build:
+      context: ../smartlogix-inventario-ms
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+
+  pedidos-ms:
+    build:
+      context: ../smartlogix-pedidos-ms
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
