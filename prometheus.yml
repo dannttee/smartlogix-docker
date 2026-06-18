@@ -1,0 +1,18 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "bff"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["bff:8080"]
+
+  - job_name: "inventario-ms"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["inventario-ms:8081"]
+
+  - job_name: "pedidos-ms"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["pedidos-ms:8082"]
