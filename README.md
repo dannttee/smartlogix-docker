@@ -17,7 +17,7 @@ Repositorio de integración para orquestar el frontend, el BFF y los microservic
 Desde esta carpeta:
 
 ```bash
-docker compose up -d --build
+docker compose up --build -d
 ```
 
 ## Acceso
