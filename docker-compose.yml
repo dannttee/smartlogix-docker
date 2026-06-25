@@ -43,6 +43,26 @@ services:
     networks:
       - smartlogix-net
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: smartlogix-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - smartlogix-net
+
   inventario-ms:
     build:
       context: ../smartlogix-inventario-ms
@@ -54,8 +74,14 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/smartlogix_inventario?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
     depends_on:
       mysql:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       - smartlogix-net
@@ -71,8 +97,14 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/smartlogix_pedidos?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
     depends_on:
       mysql:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
     networks:
       - smartlogix-net
@@ -112,6 +144,7 @@ services:
 
 volumes:
   mysql_data:
+  rabbitmq_data:
   prometheus_data:
   grafana_data:
 
